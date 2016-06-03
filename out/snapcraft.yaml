@@ -1,0 +1,9 @@
+name: ubuntu-launcher-creator # the name of the snap
+version: 1.0.0 # the version of the snap
+summary: App to create launchers on ubuntu 16 and up # 79 char long summary
+description: Electron-react app used to create launchers on ubuntu 16.40 and up  # a longer description for the snap
+confinement: strict # use "strict" to enforce system access only via declared interfaces
+parts:
+  app:
+    plugin: go
+    source: git://github.com/mikix/golang-static-http

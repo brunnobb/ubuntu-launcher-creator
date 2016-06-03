@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Create Launcher Ubuntu!</title>
+    <link rel="stylesheet" href="bundle.css">
+</head>
+
+<body>
+    <div id='app'>
+
+    </div>
+</body>
+
+
+<script>
+    require('./bundle.js');
+    require('./localScripts.js');
+    // In renderer process (web page).
+    /*require('localScripts');
+    const {
+        ipcRenderer
+    } = require('electron'); console.log(ipcRenderer.sendSync('synchronous-message', 'ping')); // prints "pong"
+
+    ipcRenderer.on('asynchronous-reply', (event, arg) => {
+        console.log(arg); // prints "pong"
+    });
+    ipcRenderer.send('asynchronous-message', 'ping');*/
+
+    //require('bundle.js')
+</script>
+
+
+
+</html>
