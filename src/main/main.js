@@ -15,7 +15,7 @@ function createWindow() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width: 800,
-        height: 600,
+        height: 870,
         resizable: false
     })
 
@@ -43,9 +43,9 @@ app.on('ready', createWindow)
 app.on('window-all-closed', function() {
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform !== 'darwin') {
+    //if (process.platform !== 'darwin') {
         app.quit()
-    }
+    //}
 })
 
 app.on('activate', function() {
@@ -109,7 +109,11 @@ ipcMain.on('asynchronous-message', (event, arg) => {
             error: ""
         }
 
-        generateFile(event, res);
+        generateFile(event, res, arg);
+    }
+
+    if (arg.type == "log") {
+      console.log(arg);
     }
 
 });
@@ -137,26 +141,46 @@ res =
 
 */
 
-function generateFile(event, res) {
+function generateFile(event, res, arg) {
     var homeDir = app.getPath('home');
     var menuDir = homeDir + "/.local/share/applications/"
-    console.log();
+    //console.log();
 
     var fileContents = "#!/usr/bin/env xdg-open";
     fileContents += "\n" + "[Desktop Entry]";
     fileContents += "\n" + "Version=" + "1.0";
-    fileContents += "\n" + "Type=" + "Application";
-    fileContents += "\n" + "Name=" + "Simple Note";
-    fileContents += "\n" + "Icon=" + "/home/brunno/Install/simplenote/Simplenote.png";
-    fileContents += "\n" + "Exec=" + "/home/brunno/Install/simplenote/Simplenote";
-    fileContents += "\n" + "Comment=" + "note notepad fast write text";
-    fileContents += "\n" + "Categories=" + "IDE;Development;";
-    fileContents += "\n" + "Terminal=" + "false";
+    //fileContents += "\n" + "Type=" + "Application";
+    fileContents += "\n" + "Type=" + arg.state.valueTp;
+    //fileContents += "\n" + "Name=" + "Simple Note";
+    fileContents += "\n" + "Name=" + arg.state.valueName;
+    //fileContents += "\n" + "Icon=" + "/home/brunno/Install/simplenote/Simplenote.png";valueIcon
+    fileContents += "\n" + "Icon=" + arg.state.valueIcon;
+    //fileContents += "\n" + "Icon=" + "/home/brunno/Install/simplenote/Simplenote.png";
+    fileContents += "\n" + "Exec=" + arg.state.valueExec;
+    //fileContents += "\n" + "Exec=" + "/home/brunno/Install/simplenote/Simplenote";
+    fileContents += "\n" + "Comment=" + arg.state.valueComment;
+    //fileContents += "\n" + "Comment=" + "note notepad fast write text";
+    //fileContents += "\n" + "Categories=" + "IDE;Development;";
+    fileContents += "\n" + "Categories=" + arg.state.valueCategories;
+    var tpTerminal='';
+    if (arg.state.valueTerminal===1){
+      tpTerminal='true';
+    }
+    else{
+      tpTerminal='false';
+    }
+    fileContents += "\n" + "Terminal=" + tpTerminal;
+    if (arg.state.valueWMClass!=''){
+      fileContents += "\n" + "StartupWMClass=" + arg.state.valueWMClass;
+    }
 
     //event.sender.send('asynchronous-reply', res);
 
-    var fileName = "SimpleNote.desktop";
+    //var fileName = "SimpleNote.desktop";
+    var fileName = (arg.state.valueName + ".desktop").replace(' ', '');
     fileName = menuDir + fileName;
+
+    console.log("Creating File " + fileName);
 
     fs.writeFile(fileName, fileContents, function(err) {
         if (err) {
@@ -164,14 +188,15 @@ function generateFile(event, res) {
             res.error = err;
 
             //return console.log(err);
-            console.log("The file was not saved!");
+            console.log("The file was NOT saved!");
             console.log(res);
         } else {
 
             res.error="";
             res.noError=1;
             console.log("The file was saved!");
-            console.log(res);
+            console.log("Contents" + fileContents);
+            console.log("Name" + arg.state.valueName);
 
         }
         event.sender.send('asynchronous-reply', res);

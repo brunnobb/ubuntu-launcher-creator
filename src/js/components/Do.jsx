@@ -21,7 +21,7 @@ class Do extends React.Component {
         super(props);
         this.state = {
             valueApp: "",
-            valueType: "",
+            valueTp: "",
             valueName: "",
             valueComment: "",
             valueCategories: "",
@@ -40,11 +40,10 @@ class Do extends React.Component {
         this.handleChangeName = this.handleChangeName.bind(this);
         this.handleChangeComment = this.handleChangeComment.bind(this);
         this.handleChangeExec = this.handleChangeExec.bind(this);
-        this.xxxxxxxxxxxxxxhandleChangeIcon = this.handleChangeIcon.bind(this);
+        this.handleChangeIcon = this.handleChangeIcon.bind(this);
         this.handleChangeCategories = this.handleChangeCategories.bind(this);
         this.handleChangeTerminal = this.handleChangeTerminal.bind(this);
         this.handleChangeWMClass = this.handleChangeWMClass.bind(this);
-
 
         var self = this;
         window.ipcRenderer.removeAllListeners('asynchronous-reply');
@@ -63,7 +62,7 @@ class Do extends React.Component {
             }
 
             if (arg.type === "createShortcut") {
-              console.log(arg);
+                console.log(arg);
                 if (arg.noError == 1) {
                     this.setState({openSnack: true, messageSnack: "Shortcut generated with success"});
                 } else {
@@ -73,6 +72,10 @@ class Do extends React.Component {
 
         });
 
+    };
+
+    handleRequestClose = () => {
+        this.setState({openSnack: false});
     };
 
     handleActionButton() {
@@ -103,12 +106,16 @@ class Do extends React.Component {
     };
 
     handleChangeApp(event) {
+
         this.setState({valueApp: event.target.value});
     }
-    handleChangeType(event) {
-        this.setState({valueType: event.target.value});
+    handleChangeType(value) {
+        console.log("trocou type = " + value);
+        this.setState({valueTp: value});
+
     }
     handleChangeName(event) {
+        console.log("trocou name = " + event.target.value);
         this.setState({valueName: event.target.value});
     }
     handleChangeComment(event) {
@@ -124,6 +131,7 @@ class Do extends React.Component {
         this.setState({valueIcon: event.target.value});
     }
     handleChangeTerminal = (event, index, value) => this.setState({valueTerminal: value});
+
     handleChangeWMClass(event) {
         this.setState({valueWMClass: event.target.value});
     }
@@ -145,8 +153,8 @@ class Do extends React.Component {
                 margin: 12,
                 width: 300
             },
-            fullWidth:{
-              width:"100%"
+            fullWidth: {
+                width: "100%"
             },
             buttonComplement: {
 
@@ -173,7 +181,7 @@ class Do extends React.Component {
 
                 <Paper styles={fabholder}>
 
-                    <AutoComplete onChange={this.handleChangeType} value={this.state.valueType} floatingLabelText="App Type - Write for other values" filter={AutoComplete.noFilter} openOnFocus={true} fullWidth={true} dataSource={appTypes}/>
+                    <AutoComplete onUpdateInput={this.handleChangeType} onNewRequest={this.handleChangeType} searchText={this.state.valueTp} floatingLabelText="App Type - Write for other values" filter={AutoComplete.noFilter} openOnFocus={true} fullWidth={true} dataSource={appTypes}/>
                     <br/>
                     <TextField onChange={this.handleChangeName} value={this.state.valueName} floatingLabelText="App Name" fullWidth={true}/>
 
@@ -216,7 +224,7 @@ class Do extends React.Component {
 
                 </Paper>
 
-                <Snackbar open={this.state.openSnack} message={this.state.messageSnack} autoHideDuration={4000}/>
+                <Snackbar open={this.state.openSnack} message={this.state.messageSnack} onRequestClose={this.handleRequestClose} autoHideDuration={4000}/>
             </div>
         )
     };
