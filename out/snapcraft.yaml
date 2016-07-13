@@ -2,8 +2,122 @@ name: ubuntu-launcher-creator # the name of the snap
 version: 1.0.0 # the version of the snap
 summary: App to create launchers on ubuntu 16 and up # 79 char long summary
 description: Electron-react app used to create launchers on ubuntu 16.40 and up  # a longer description for the snap
-confinement: strict # use "strict" to enforce system access only via declared interfaces
+confinement: devmode # use "strict" to enforce system access name: ubuntu-launcher-creator  # the name of the snap
+version: 1.0  # the version of the snap
+summary: Snap Launcher Creator Package  # 79 char long summary
+description: Snap app used to create launchers on ubuntu systems  # a longer description for the snap
+confinement: devmode  # use "strict" to enforce system access only via declared interfaces
+apps:
+  ubuntu-launcher:
+    command: wrapper
+    plugs: [unity7, opengl, network, home]
+  busybox:
+    command: sh
+    plugs: [unity7, opengl, network, home]
 parts:
-  app:
-    plugin: go
-    source: git://github.com/mikix/golang-static-http
+    ubuntu-launcher:  # Replace with a part name of your liking
+        # Get more information about plugins by running
+        # snapcraft help plugins
+        # and more information about the available plugins
+        # by running
+        # snapcraft list-plugins
+        plugin: copy
+        stage-packages:
+          - libnss3
+          - fontconfig-config
+          - gnome-themes-standard
+            - libatk1.0-0
+            - libatk1.0-data
+            - libatk-adaptor
+            - libatk-bridge2.0-0
+            - libgtk2.0-0
+            - libgdk-pixbuf2.0-0
+
+            - unity-gtk3-module
+            - unity-gtk2-module
+            - unity-gtk-module-common
+            - overlay-scrollbar
+            - overlay-scrollbar-gtk2
+
+      - libcanberra-gtk-module:i386
+      gtk2-engines-murrine
+
+      sudo apt-get install gtk2-engines
+sudo apt-get install gtk2-engines-*
+sudo apt-get install libgtkmm-2.4-1c2
+sudo apt-get install libcanberra-gtk-module
+
+        files:
+          wrapper: usr/bin/wrapper
+          ./../build/ubuntu-launcher-creator-linux-x64/ubuntu-launcher-creator: ubuntu-launcher-creator
+          ../build/ubuntu-launcher-creator-linux-x64/content_shell.pak: content_shell.pak
+          ../build/ubuntu-launcher-creator-linux-x64/icudtl.dat: icudtl.dat
+          ../build/ubuntu-launcher-creator-linux-x64/snapshot_blob.bin: snapshot_blob.bin
+          ../build/ubuntu-launcher-creator-linux-x64/natives_blob.bin: natives_blob.bin
+          ../build/ubuntu-launcher-creator-linux-x64/libnode.so: usr/lib/x86_64-linux-gnu/libnode.so
+          ../build/ubuntu-launcher-creator-linux-x64/libffmpeg.so: usr/lib/x86_64-linux-gnu/libffmpeg.so
+
+
+    busybox:
+      plugin: nil
+      stage-packages:
+        - busybox
+only via declared interfaces
+apps:
+  ubuntu-launcher-creator:
+    command: wrapper
+    plugs: [home, x11, unity7, gsettings, opengl, pulseaudio, network]
+  busybox:
+    command: sh
+    plugs: [home, x11, unity7, gsettings, opengl, pulseaudio, network]
+parts:
+  ubuntu-launcher-creator:
+    plugin: copy
+    stage-packages:
+      - libnss3
+      - fontconfig-config
+      - gnome-themes-standard
+      - unity-gtk3-module
+      - overlay-scrollbar
+      - libatk1.0-0
+      - libatk-adaptor
+      - libgail-3-0
+      - libgail-common
+      - libcanberra-gtk-module
+
+      - gconf-service
+      - gconf2
+      - gvfs-bin
+      - libasound2
+      - libcap2
+      - libgcrypt20
+      - libgtk2.0-0
+      - libnotify4
+      - libudev1
+      - libxtst6
+      - python
+      - xdg-utils
+      - unity-gtk2-module
+
+
+      - unity-gtk-module-common
+      - overlay-scrollbar-gtk2
+      - libgtkmm-2.4-1v5
+      - gtk2-engines-murrine
+
+
+    files:
+      ubuntu-launcher-creator: ubuntu-launcher-creator
+      wrapper: usr/bin/wrapper
+      content_shell.pak: content_shell.pak
+      icudtl.dat: icudtl.dat
+      snapshot_blob.bin: snapshot_blob.bin
+      natives_blob.bin: natives_blob.bin
+      resources*: resources
+      locales*: locales
+      libnode.so: usr/lib/x86_64-linux-gnu/libnode.so
+      libffmpeg.so: usr/lib/x86_64-linux-gnu/libffmpeg.so
+  busybox:
+    plugin: nil
+    stage-packages:
+      - busybox
