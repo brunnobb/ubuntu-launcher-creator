@@ -12,9 +12,9 @@ var App = require('./components/MainAppComponent.jsx');
 var Redir = require('./components/Redir.jsx');
 import Do from './components/Do.jsx';
 
-var injectTapEventPlugin = require("react-tap-event-plugin");
+//var injectTapEventPlugin = require("react-tap-event-plugin");
 
-injectTapEventPlugin();
+//injectTapEventPlugin();
 
 ReactDOM.render((
   <Router history={hashHistory}>
